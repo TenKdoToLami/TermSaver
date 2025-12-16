@@ -32,13 +32,6 @@ private:
     double current_hue;             ///< Current color hue (0-360)
 
     /**
-     * @brief Maps a Hue value (0-360) to an Xterm-256 palette index.
-     * @param h Hue value.
-     * @return Palette index (16-231).
-     */
-    int get_color_from_hue(double h);
-
-    /**
      * @brief Generates raster points for a line using Bresenham's algorithm.
      */
     std::vector<Point> get_line_points(int x1, int y1, int x2, int y2);

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 /**
  * @brief Displays the interactive selection menu.
  * 
@@ -7,4 +10,4 @@
  * 
  * @return int The index of the selected animation, or -1 if the user quits.
  */
-int show_menu();
+int show_menu(const std::string& title, const std::vector<std::string>& options);

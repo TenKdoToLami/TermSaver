@@ -5,27 +5,6 @@ RotatingLineLogo::RotatingLineLogo() : angle(0.0), current_hue(0.0) {}
 int RotatingLineLogo::get_width() const { return 0; }
 int RotatingLineLogo::get_height() const { return 0; }
 
-int RotatingLineLogo::get_color_from_hue(double h) {
-    double s = 1.0, v = 1.0;
-    double c = v * s;
-    double x = c * (1 - std::abs(std::fmod(h / 60.0, 2) - 1));
-    double m = v - c;
-    double r=0, g=0, b=0;
-    
-    if (h < 60) { r=c; g=x; b=0; }
-    else if (h < 120) { r=x; g=c; b=0; }
-    else if (h < 180) { r=0; g=c; b=x; }
-    else if (h < 240) { r=0; g=x; b=c; }
-    else if (h < 300) { r=x; g=0; b=c; }
-    else { r=c; g=0; b=x; }
-    
-    int ri = (int)((r + m) * 5);
-    int gi = (int)((g + m) * 5);
-    int bi = (int)((b + m) * 5);
-    
-    return 16 + (36 * ri) + (6 * gi) + bi;
-}
-
 std::vector<RotatingLineLogo::Point> RotatingLineLogo::get_line_points(int x1, int y1, int x2, int y2) {
     std::vector<Point> pts;
     int dx = std::abs(x2 - x1), sx = x1 < x2 ? 1 : -1;

@@ -5,47 +5,16 @@
 #include <unistd.h>
 #include "Logo.hpp"
 #include "BouncingAsciiLogo.hpp"
+#include "RippleAsciiLogo.hpp"
+#include "HeartbeatAsciiLogo.hpp"
 #include "RotatingLineLogo.hpp"
 #include "Menu.hpp"
-#include "Art.hpp"
-
-// Define Art Data that was declared in Art.hpp
-const std::vector<std::string> BARTY_ART = {
-    "  ____    _    ____  _____ __   __  ",
-    " | __ )  / \\  |  _ \\|_   _|\\ \\ / /  ",
-    " |  _ \\ / _ \\ | |_) | | |   \\ V /   ",
-    " | |_) / ___ \\|  _ <  | |    | |    ",
-    " |____/_/   \\_\\_| \\_\\ |_|    |_|    "
-};
-
-const std::vector<std::string> POP_ART = {
-    "             /////////////             ",
-    "         /////////////////////         ",
-    "      ///////*7676////////////////     ",
-    "    //////7676767676*//////////////    ",
-    "   /////76767//7676767//////////////   ",
-    "  /////767676///76767///////////////   ",
-    " ///////767676///76767.///7676*/////// ",
-    "/////////767676//76767///767676////////",
-    "//////////76767676767////76767/////////",
-    "///////////76767676//////7676//////////",
-    "////////////,7676,///////767///////////",
-    "/////////////*7676///////76////////////",
-    "///////////////7676////////////////////",
-    "///////////////7676///767////////////  ",
-    "  //////////////////////'////////////  ",
-    "   //////.7676767676767676767,//////   ",
-    "    /////767676767676767676767/////    ",
-    "      ///////////////////////////      ",
-    "         /////////////////////         ",
-    "             /////////////             "
-};
+#include "AsciiArt.hpp"
 
 int main() {
     setlocale(LC_ALL, ""); // Enable UTF-8
     srand(time(NULL));
 
-    // Ncurses Initialization
     initscr();
     noecho();
     curs_set(FALSE);
@@ -54,69 +23,84 @@ int main() {
     use_default_colors();
 
     if (!can_change_color() && COLORS < 8) {
-        // Fallback for limited terminals could go here
+        // Fallback
     }
 
-    // Initialize Color Pairs (1 to 255)
     int max_c = COLORS > 255 ? 255 : COLORS - 1;
     for (int i = 1; i <= max_c; ++i) {
         init_pair(i, i, COLOR_BLACK);
     }
 
-    // Main Application Loop
     while (true) {
-        // 1. Show Menu
-        // Ensure blocking input for menu
+        // 1. Category Selection
         timeout(-1); 
-        int selection = show_menu();
+        std::vector<std::string> categories = {
+            "Bouncing Logo",
+            "Ripple Effect",
+            "Heartbeat Pulse",
+            "Radar Sweep"
+        };
         
-        // Check for exit condition (Left Arrow in Menu)
-        if (selection == -1) {
-            break; // Exit the App
+        int cat_sel = show_menu("SELECT CATEGORY", categories);
+        if (cat_sel == -1) break; // Exit
+        
+        // 2. Art Selection
+        int art_sel = 0;
+        if (cat_sel != 3) {
+            std::vector<std::string> art_options = {"Barty Logo", "Pop!_OS Logo"};
+            art_sel = show_menu("SELECT LOGO", art_options);
+            if (art_sel == -1) continue; 
         }
-        
-        // 2. Prepare Animation
-        timeout(0); // Switch to non-blocking input handling for animation
 
+        // 3. Prepare Animation
+        timeout(0); 
         Logo* app = nullptr;
-        switch(selection) {
-            case 0: app = new BouncingAsciiLogo(BARTY_ART); break;
-            case 1: app = new BouncingAsciiLogo(POP_ART); break;
-            case 2: app = new RotatingLineLogo(); break;
-            default: app = new BouncingAsciiLogo(BARTY_ART); break;
-        }
-
-        int max_x, max_y;
-        getmaxyx(stdscr, max_y, max_x);
-        app->init_position(max_y, max_x);
-
-        // 3. Animation Loop
-        bool back_to_menu = false;
-        while (!back_to_menu) {
-            clear();
-            getmaxyx(stdscr, max_y, max_x);
-
-            app->update(max_y, max_x);
-            app->draw();
-
-            refresh();
-
-            int ch = getch();
-            // Q or Left Arrow to go back
-            if (ch == 'q' || ch == 'Q' || ch == KEY_LEFT) {
-                back_to_menu = true;
-            }
-
-            usleep(100000); // ~10 FPS
-        }
-
-        // Cleanup current animation
-        delete app;
         
-        // Loop continues -> Show Menu again
+        if (cat_sel == 3) { // Radar
+            app = new RotatingLineLogo();
+        } else {
+            // Get Screen Dimensions for auto-sizing
+            int max_x, max_y;
+            getmaxyx(stdscr, max_y, max_x);
+            
+            // Determine Constraints
+            bool force_small = (cat_sel == 0); // Bouncing -> Force Small
+            const LogoVariants* variants = (art_sel == 0) ? &BARTY_VARIANTS : &POP_VARIANTS;
+            
+            // Select Art
+            const std::vector<std::string>& art_data = select_art(*variants, force_small, max_y, max_x);
+            
+            if (cat_sel == 0) app = new BouncingAsciiLogo(art_data);
+            else if (cat_sel == 1) app = new RippleAsciiLogo(art_data);
+            else if (cat_sel == 2) app = new HeartbeatAsciiLogo(art_data);
+        }
+        
+        if (app) {
+            int max_x, max_y;
+            getmaxyx(stdscr, max_y, max_x);
+            app->init_position(max_y, max_x);
+
+            bool back_to_menu = false;
+            while (!back_to_menu) {
+                clear();
+                getmaxyx(stdscr, max_y, max_x);
+
+                app->update(max_y, max_x);
+                app->draw();
+
+                refresh();
+
+                int ch = getch();
+                if (ch == 'q' || ch == 'Q' || ch == KEY_LEFT) {
+                    back_to_menu = true;
+                }
+
+                usleep(100000); 
+            }
+            delete app;
+        }
     }
 
     endwin();
-
     return 0;
 }

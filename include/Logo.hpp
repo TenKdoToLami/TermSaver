@@ -33,13 +33,20 @@ public:
     virtual void on_bounce();
 
     /**
+     * @brief Helper for rainbow effects. Converts HSV hue to Xterm-256 color index.
+     * @param h Hue value (0.0 to 360.0).
+     * @return int Color pair index.
+     */
+    int get_color_from_hue(double h);
+
+    /**
      * @brief Initializes the logo's position to the center of the screen
      * and randomizes initial direction.
      * 
-     * @param scr_height Height of the screen.
-     * @param scr_width Width of the screen.
+     * @param scr_height Screen height
+     * @param scr_width Screen width
      */
-    void init_position(int scr_height, int scr_width);
+    virtual void init_position(int scr_height, int scr_width);
 
     /**
      * @brief Gets the width of the logo.

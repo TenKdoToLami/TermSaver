@@ -4,12 +4,7 @@
 #include <string>
 #include <unistd.h>
 
-int show_menu() {
-    std::vector<std::string> options = {
-        "Barty Logo (Standard)",
-        "Pop!_OS Logo (Neofetch)",
-        "Radar Sweep (Rainbow)"
-    };
+int show_menu(const std::string& title, const std::vector<std::string>& options) {
     int choice = 0;
     int max_choice = options.size() - 1;
     
@@ -44,9 +39,8 @@ int show_menu() {
         attroff(A_BOLD);
 
         // Header inside box
-        const char* title = "SELECT ANIMATION";
         attron(A_BOLD | A_UNDERLINE);
-        mvprintw(start_y + 1, center_x - (std::string(title).length()/2), "%s", title);
+        mvprintw(start_y + 1, center_x - (title.length()/2), "%s", title.c_str());
         attroff(A_BOLD | A_UNDERLINE);
         
         // Header Separator
@@ -112,7 +106,6 @@ int show_menu() {
         } else if (ch == KEY_LEFT || ch == 'q' || ch == 'Q') {
             return -1;
         }
-        
-        usleep(10000); 
     }
-}
+}    
+

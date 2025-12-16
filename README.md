@@ -6,7 +6,7 @@ A terminal-based screensaver application written in C++ using `ncurses`. It feat
 
 - **Menu System**: Interactive selection menu with "slot machine" scrolling style.
 - **Bouncing Logos**:
-  - **Barty Logo**: Custom FIGlet-style text animation.
+  - **Barty Logo**: Custom FIGlet-style text animation with **responsive sizing** (automatically selects the best fit for your terminal window).
   - **Pop!_OS Logo**: Official Neofetch ASCII art.
   - *Generic Support*: Use `BouncingAsciiLogo` to animate any ASCII art.
 - **Radar Sweep**: A `RotatingLineLogo` algorithm that creates a gap-free radar sweep with proper Hue-based rainbow color cycling.
