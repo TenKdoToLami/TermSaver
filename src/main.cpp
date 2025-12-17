@@ -33,7 +33,7 @@ int main() {
 
     // 4. Initialize State Manager
     StateManager app;
-    app.push_state(std::make_unique<CategorySelectState>());
+    app.push_state(std::make_unique<IntroState>());
 
     // 5. Main Event Loop
     while (app.is_running()) {
