@@ -1,3 +1,8 @@
+/**
+ * @file BouncingAsciiLogo.cpp
+ * @brief Implementation of the DVD-screensaver style bouncing logo.
+ */
+
 #include "BouncingAsciiLogo.hpp"
 
 BouncingAsciiLogo::BouncingAsciiLogo(const std::vector<std::string>& art_data) : lines(art_data) {

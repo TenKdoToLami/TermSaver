@@ -1,3 +1,8 @@
+/**
+ * @file Logo.cpp
+ * @brief Base logic for ASCII logos (position, movement, color utilities).
+ */
+
 #include "Logo.hpp"
 #include <cmath>
 #include <cstdlib>

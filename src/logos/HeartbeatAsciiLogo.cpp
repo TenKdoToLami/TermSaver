@@ -1,3 +1,8 @@
+/**
+ * @file HeartbeatAsciiLogo.cpp
+ * @brief Implementation of the pulsating heartbeat effect.
+ */
+
 #include "HeartbeatAsciiLogo.hpp"
 #include <cmath>
 #include <algorithm>
@@ -14,7 +19,7 @@ HeartbeatAsciiLogo::HeartbeatAsciiLogo(const std::vector<std::string>& art_data)
     // Initial State
     state = HeartbeatState::EXPANDING;
     radius = 0.0;
-    speed = 1.5; // Pulse speed
+    speed = 1.5; 
     
     // Initial Colors
     current_bg_hue = 0.0;   // Start Red
@@ -57,7 +62,7 @@ void HeartbeatAsciiLogo::update(int /*scr_height*/, int /*scr_width*/) {
         radius += speed;
         if (radius >= max_radius) {
             state = HeartbeatState::RETRACTING;
-            // Pick a new color for the next background reveal
+            // Reveal a new background color on next retraction
             next_bg_hue = (int)(next_bg_hue + 60) % 360; 
         }
     } else {
@@ -66,16 +71,10 @@ void HeartbeatAsciiLogo::update(int /*scr_height*/, int /*scr_width*/) {
             radius = 0;
             state = HeartbeatState::EXPANDING;
             
-            // The pulse has fully retracted. 
-            // The "Background" is now what was revealed (next_bg_hue)
-            // But wait, the logic is:
-            // EXPANDING: Pulse covers BG.
-            // RETRACTING: Pulse retracts to reveal NEXT BG.
-            // So when fully retracted, the visible logo is NEXT BG.
-            // This becomes the CURRENT BG for the next expansion.
+            // Cycle colors:
+            // 1. Fully retracted -> Previous "Next BG" becomes "Current BG"
+            // 2. Pick a new pulse color for the upcoming expansion
             current_bg_hue = next_bg_hue;
-            
-            // And we need a NEW pulse color for the next expansion.
             pulse_hue = (int)(pulse_hue + 40) % 360;
         }
     }

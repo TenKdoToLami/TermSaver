@@ -1,17 +1,30 @@
-#ifndef HEARTBEAT_ASCII_LOGO_HPP
-#define HEARTBEAT_ASCII_LOGO_HPP
+#pragma once
 
 #include "Logo.hpp"
 #include <vector>
 #include <string>
 
+/**
+ * @enum HeartbeatState
+ * @brief Current animation phase for the heartbeat effect.
+ */
 enum class HeartbeatState {
     EXPANDING,
     RETRACTING
 };
 
+/**
+ * @class HeartbeatAsciiLogo
+ * @brief Renders a "heartbeat" pulsing effect.
+ * 
+ * Expands and contracts the logo color radius while cycling background and foreground hues.
+ */
 class HeartbeatAsciiLogo : public Logo {
 public:
+    /**
+     * @brief Construct a new Heartbeat Ascii Logo.
+     * @param art_data ASCII art lines.
+     */
     HeartbeatAsciiLogo(const std::vector<std::string>& art_data);
 
     void init_position(int scr_height, int scr_width) override;
@@ -37,5 +50,3 @@ private:
     double pulse_hue;
     double next_bg_hue;
 };
-
-#endif // HEARTBEAT_ASCII_LOGO_HPP

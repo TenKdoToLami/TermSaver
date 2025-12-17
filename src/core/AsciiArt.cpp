@@ -85,6 +85,9 @@ const LogoVariants POP_VARIANTS = {{
 // LOGIC -----------------------------------------------------------------------
 
 namespace {
+    /**
+     * @brief Helper to calculate the maximum dimensions of an art block.
+     */
     void get_dims(const std::vector<std::string>& art, int& w, int& h) {
         h = art.size();
         w = 0;
@@ -101,12 +104,10 @@ const std::vector<std::string>& select_art(const LogoVariants& variants, bool fo
     }
 
     if (force_small) {
-        // Return the LAST element (Smallest)
         return variants.variants.back();
     }
     
-    // Iterate from Largest (0) to Smallest (end)
-    // Return first one that fits
+    // Choose the largest variant that fits within the screen dimensions
     for (const auto& art : variants.variants) {
         int w, h;
         get_dims(art, w, h);
@@ -115,6 +116,23 @@ const std::vector<std::string>& select_art(const LogoVariants& variants, bool fo
         }
     }
     
-    // If none fit, return the smallest (last one) as a fallback
+    // Fallback to the smallest variant
     return variants.variants.back();
+}
+
+std::vector<std::string> generate_noise_art(int width, int height) {
+    std::vector<std::string> art;
+    art.reserve(height);
+
+    const std::string chars = "   !\"#$%&'()*+,-./:;<>=?&[]\\^|}{~€ƒ‡—";
+    
+    for (int i = 0; i < height; ++i) {
+        std::string line;
+        line.reserve(width);
+        for (int j = 0; j < width; ++j) {
+            line += chars[rand() % chars.length()];
+        }
+        art.push_back(line);
+    }
+    return art;
 }

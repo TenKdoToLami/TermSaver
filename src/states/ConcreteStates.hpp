@@ -1,0 +1,89 @@
+#pragma once
+#include "MenuState.hpp"
+#include "StateManager.hpp"
+#include "AsciiArt.hpp"
+#include "Logo.hpp"
+#include "BouncingAsciiLogo.hpp"
+#include "RippleAsciiLogo.hpp"
+#include "HeartbeatAsciiLogo.hpp"
+#include "RotatingLineLogo.hpp"
+
+// Forward declare specific animation state
+class AnimationState;
+
+/**
+ * @class LogoSelectState
+ * @brief Menu for selecting the specific ASCII model (Barty, Pop_OS, Noise).
+ */
+class LogoSelectState : public MenuState {
+public:
+    LogoSelectState(const std::string& parent_path, const std::string& effect_name) 
+        : MenuState(parent_path + "/" + effect_name, {"Barty", "Pop!_OS", "Static Noise", "Back"}) {}
+    
+protected:
+    void on_select(StateManager& mgr, int index) override;
+    void on_back(StateManager& mgr) override {
+        mgr.pop_state(); 
+    }
+};
+
+/**
+ * @class CategorySelectState
+ * @brief Main Menu for selecting the visual effect category.
+ */
+class CategorySelectState : public MenuState {
+public:
+    CategorySelectState() : MenuState("SELECT EFFECT", {
+        "Kinetic Bounce",
+        "Radial Ripple",
+        "Cardio Pulse",
+        "Sonar Sweep",
+        "Settings",
+        "Exit"
+    }) {}
+
+protected:
+    void on_select(StateManager& mgr, int index) override;
+    void on_back(StateManager& mgr) override;
+};
+
+/**
+ * @class SettingsState
+ * @brief Menu for configuring global application settings (FPS, etc).
+ */
+class SettingsState : public MenuState {
+public:
+    SettingsState(const std::string& path);
+    
+    /** @brief Handles value adjustment via Left/Right keys. */
+    void handle_input(int ch, StateManager& mgr) override;
+
+    /** @brief Draws the menu with live-updated value text. */
+    void draw(StateManager& mgr) override;
+
+protected:
+    void on_select(StateManager& mgr, int index) override;
+    void on_back(StateManager& mgr) override;
+    
+    void update_options_text(StateManager& mgr);
+    std::string current_path;
+};
+
+/**
+ * @class StaticNoiseSettingsState
+ * @brief Submenu for configuring static noise specific settings.
+ */
+class StaticNoiseSettingsState : public MenuState {
+public:
+    StaticNoiseSettingsState(const std::string& path);
+    
+    void handle_input(int ch, StateManager& mgr) override;
+    void draw(StateManager& mgr) override;
+
+protected:
+    void on_select(StateManager& mgr, int index) override;
+    void on_back(StateManager& mgr) override;
+    
+    void update_options_text(StateManager& mgr);
+};
+

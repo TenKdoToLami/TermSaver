@@ -1,3 +1,8 @@
+/**
+ * @file RippleAsciiLogo.cpp
+ * @brief Implementation of the ripple color effect.
+ */
+
 #include "RippleAsciiLogo.hpp"
 #include <cmath>
 

@@ -1,4 +1,5 @@
 # Build Artifacts
+build/
 obj/
 ascii_screensaver
 *.o

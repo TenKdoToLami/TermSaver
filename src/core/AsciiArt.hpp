@@ -30,3 +30,12 @@ extern const LogoVariants POP_VARIANTS;
  * @return const std::vector<std::string>& The selected art.
  */
 const std::vector<std::string>& select_art(const LogoVariants& variants, bool force_small, int scr_height, int scr_width);
+
+/**
+ * @brief Generates a full-screen field of random ASCII characters.
+ * 
+ * @param width Width of the field.
+ * @param height Height of the field.
+ * @return std::vector<std::string> The generated art.
+ */
+std::vector<std::string> generate_noise_art(int width, int height);

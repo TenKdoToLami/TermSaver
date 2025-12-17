@@ -1,54 +1,64 @@
-# Ncurses ASCII Screensaver
+# TermSaver
 
-A terminal-based screensaver application written in C++ using `ncurses`. It features physics-based bouncing ASCII logos and algorithmic drawing effects.
+A premium terminal-based screensaver application written in C++ using `ncurses`. Featuring fluid physics-based kinetic animations, dynamic coloring, and algorithmic visual effects.
 
 ## Features
 
-- **Menu System**: Interactive selection menu with "slot machine" scrolling style.
-- **Bouncing Logos**:
-  - **Barty Logo**: Custom FIGlet-style text animation with **responsive sizing** (automatically selects the best fit for your terminal window).
-  - **Pop!_OS Logo**: Official Neofetch ASCII art.
-  - *Generic Support*: Use `BouncingAsciiLogo` to animate any ASCII art.
-- **Radar Sweep**: A `RotatingLineLogo` algorithm that creates a gap-free radar sweep with proper Hue-based rainbow color cycling.
-- **Modular Architecture**: Clean separation of core logic, ASCII art data, and rendering implementations.
+- **Kinetic Bounce**: Physics-based bouncing logos with responsive resizing logic.
+- **Radial Ripple**: Hypnotic, expanding color waves.
+- **Cardio Pulse**: Rhythmic, breathing heartbeat animations.
+- **Sonar Sweep**: Gap-free radar sweep with interpolated rendering and rainbow trails.
+- **Static Noise**: A dynamic, adjustable TV static effect.
+- **Interactive Menu**:
+    - **Slot Machine** scrolling style.
+    - **Breadcrumb Navigation** (e.g., `SELECT EFFECT / SETTINGS / NOISE`).
+    - **Settings Manager**: Control FPS, noise density, and global overrides.
 
 ## Controls
 
 ### Menu
-- **UP / DOWN**: Scroll through the list of animations.
-- **RIGHT / ENTER**: Select and start the animation.
-- **LEFT**: Exit the application.
+- **UP / DOWN**: Navigate options.
+- **RIGHT / ENTER**: Select / Confirm.
+- **LEFT / Q**: Back / Exit.
 
-### Animation
-- **Q**: Quit the animation and return to the terminal.
+### Settings
+- **LEFT / RIGHT**: Adjust values (FPS, Percentages).
+- **ENTER**: Toggle checkboxes.
+
+### While Running (Animation)
+- **Q / LEFT**: Stop animation and return to menu.
 
 ## Build Instructions
 
 ### Prerequisites
 - Linux / Unix environment
 - C++17 compliant compiler (`g++`)
-- `ncurses` library (`libncurses-dev` or similar)
+- `cmake` (version 3.10+)
+- `ncurses` library with wide-char support (`libncursesw5-dev` or similar)
 
-### Compiling
-Run `make` to compile the source code:
-
-```bash
-make
-```
-
-### Running
-Start the application:
+### Compiling & Running
+The project uses a simple wrapper `Makefile` for convenience.
 
 ```bash
+# Build and Run
 make run
+
+# Clean Build
+make clean
 ```
-Or directly:
+
+Or manually via CMake:
 ```bash
-./ascii_screensaver
+mkdir build && cd build
+cmake ..
+make
+./termsaver
 ```
 
 ## Project Structure
 
-- `src/`: Source code (`.cpp`)
-- `include/`: Header files (`.hpp`)
-- `Makefile`: Build configuration
+- `src/core/`: Application loop (`main`), `StateManager`, and static helpers.
+- `src/logos/`: Visual effect implementations (`Logo` subclasses).
+- `src/states/`: Menu logic and State management classes.
+- `include/`: Header files (if separated, currently merged in source tree for simplicity).
+- `CMakeLists.txt`: Build configuration.

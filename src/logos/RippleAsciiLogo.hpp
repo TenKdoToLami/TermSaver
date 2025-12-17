@@ -1,5 +1,4 @@
-#ifndef RIPPLE_ASCII_LOGO_HPP
-#define RIPPLE_ASCII_LOGO_HPP
+#pragma once
 
 #include "Logo.hpp"
 #include <vector>
@@ -13,14 +12,12 @@ class RippleAsciiLogo : public Logo {
 public:
     /**
      * @brief Construct a new Ripple Ascii Logo object
-     * 
      * @param art_data Vector of strings representing the ASCII art
      */
     RippleAsciiLogo(const std::vector<std::string>& art_data);
 
     /**
      * @brief Initialize position (centers the logo)
-     * 
      * @param scr_height Screen height
      * @param scr_width Screen width
      */
@@ -28,14 +25,13 @@ public:
 
     /**
      * @brief Update the color state (does not move position)
-     * 
-     * @param scr_height 
-     * @param scr_width 
+     * @param scr_height Screen height
+     * @param scr_width Screen width
      */
     void update(int scr_height, int scr_width) override;
 
     /**
-     * @brief Draw the logo with the current color
+     * @brief Draw the logo with the current color pattern.
      */
     void draw() override;
 
@@ -48,5 +44,3 @@ private:
     int height;
     double current_hue;
 };
-
-#endif // BREATHING_ASCII_LOGO_HPP
