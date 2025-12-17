@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Logo.hpp"
+#include "AsciiLogo.hpp"
 #include <vector>
 #include <string>
 
@@ -8,7 +8,7 @@
  * @class RippleAsciiLogo
  * @brief Displays a static, centered ASCII logo that ripples colors radially.
  */
-class RippleAsciiLogo : public Logo {
+class RippleAsciiLogo : public AsciiLogo {
 public:
     /**
      * @brief Construct a new Ripple Ascii Logo object
@@ -35,12 +35,6 @@ public:
      */
     void draw() override;
 
-    int get_width() const override;
-    int get_height() const override;
-
 private:
-    std::vector<std::string> lines;
-    int width;
-    int height;
     double current_hue;
 };

@@ -19,6 +19,7 @@ Logo::~Logo() {}
 void Logo::pick_new_color() {
     // Select a new random color from the palette (1-255)
     current_pair = (rand() % max_colors) + 1;
+    on_color_change();
 }
 
 void Logo::on_bounce() {
@@ -52,7 +53,7 @@ void Logo::update(int scr_height, int scr_width) {
         dx = -dx;
         // Clamp to screen
         if (x < 0) x = 0;
-        if (x + w > scr_width) x = scr_width - w; // Fix: was scr_width - width
+        if (x + w > scr_width) x = scr_width - w;
         on_bounce();
     }
 

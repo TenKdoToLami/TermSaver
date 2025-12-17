@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Logo.hpp"
+#include "AsciiLogo.hpp"
 #include <vector>
 #include <string>
 
@@ -19,7 +19,7 @@ enum class HeartbeatState {
  * 
  * Expands and contracts the logo color radius while cycling background and foreground hues.
  */
-class HeartbeatAsciiLogo : public Logo {
+class HeartbeatAsciiLogo : public AsciiLogo {
 public:
     /**
      * @brief Construct a new Heartbeat Ascii Logo.
@@ -27,17 +27,26 @@ public:
      */
     HeartbeatAsciiLogo(const std::vector<std::string>& art_data);
 
+    /**
+     * @brief Initialize position (centers the logo).
+     * @param scr_height Screen height.
+     * @param scr_width Screen width.
+     */
     void init_position(int scr_height, int scr_width) override;
+
+    /**
+     * @brief Update the heartbeat animation state (radius expansion/retraction).
+     * @param scr_height Screen height.
+     * @param scr_width Screen width.
+     */
     void update(int scr_height, int scr_width) override;
+
+    /**
+     * @brief Draw the logo with the pulsing color effect.
+     */
     void draw() override;
 
-    int get_width() const override;
-    int get_height() const override;
-
 private:
-    std::vector<std::string> lines;
-    int width;
-    int height;
     
     // Animation State
     HeartbeatState state;

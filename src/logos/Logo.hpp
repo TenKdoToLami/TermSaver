@@ -26,6 +26,13 @@ public:
     void pick_new_color();
 
     /**
+     * @brief Hook called whenever the color changes.
+     * 
+     * Derived classes can override this to regenerate content.
+     */
+    virtual void on_color_change() {}
+
+    /**
      * @brief Callback triggered when the logo hits a screen boundary.
      * 
      * Default implementation picks a new random color.

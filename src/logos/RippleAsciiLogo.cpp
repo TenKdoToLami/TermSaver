@@ -6,18 +6,7 @@
 #include "RippleAsciiLogo.hpp"
 #include <cmath>
 
-RippleAsciiLogo::RippleAsciiLogo(const std::vector<std::string>& art_data) : lines(art_data), current_hue(0.0) {
-    height = lines.size();
-    width = 0;
-    for (const auto& line : lines) {
-        if ((int)line.length() > width) {
-            width = line.length();
-        }
-    }
-}
-
-int RippleAsciiLogo::get_width() const { return width; }
-int RippleAsciiLogo::get_height() const { return height; }
+RippleAsciiLogo::RippleAsciiLogo(const std::vector<std::string>& art_data) : AsciiLogo(art_data), current_hue(0.0) {}
 
 void RippleAsciiLogo::init_position(int scr_height, int scr_width) {
     // Center exactly once
@@ -42,9 +31,6 @@ void RippleAsciiLogo::draw() {
     for (int i = 0; i < height; ++i) {
          const std::string& line = lines[i];
          for (int j = 0; j < (int)line.length(); ++j) {
-             char c = line[j];
-             if (c == ' ') continue; // Transparency
-             
              // Calculate Radial Distance
              // Multiply Y difference by 2.0 to correct for typical terminal cell aspect ratio (tall)
              // making the gradient look more circular than elliptical
@@ -59,6 +45,17 @@ void RippleAsciiLogo::draw() {
              while (local_hue >= 360.0) local_hue -= 360.0;
 
              int color_index = get_color_from_hue(local_hue);
+
+             // Dynamic Noise Logic: Regenerate cell if color changed
+             if (last_colors[i][j] != color_index) {
+                 last_colors[i][j] = color_index;
+                 if (cell_generator) {
+                     lines[i][j] = cell_generator();
+                 }
+             }
+
+             char c = lines[i][j];
+             if (c == ' ') continue; // Transparency
 
              attron(COLOR_PAIR(color_index));
              

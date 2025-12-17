@@ -52,7 +52,7 @@
 // --- LogoSelectState Implementation ---
 
 void LogoSelectState::on_select(StateManager& mgr, int index) {
-    if (index == 3) { // Back
+    if (index == 4) { // Back
         on_back(mgr);
     } else {
         mgr.context_art_index = index;
@@ -97,13 +97,14 @@ void CategorySelectState::on_back(StateManager& mgr) {
 
 SettingsState::SettingsState(const std::string& path) 
     : MenuState(path + "/SETTINGS", {}), current_path(path + "/SETTINGS") {
-    options = {"Target FPS", "Static Noise Settings", "Back"};
+    options = {"Target FPS", "Static Noise Settings", "Dynamic Noise Settings", "Back"};
 }
 
 void SettingsState::update_options_text(StateManager& mgr) {
     options[0] = "Target FPS: " + std::to_string(mgr.settings.target_fps);
     options[1] = "Static Noise Settings";
-    options[2] = "Back";
+    options[2] = "Dynamic Noise Settings";
+    options[3] = "Back";
 }
 
 void SettingsState::draw(StateManager& mgr) {
@@ -122,14 +123,14 @@ void SettingsState::handle_input(int ch, StateManager& mgr) {
         if (choice == 0) { // Target FPS
             mgr.settings.target_fps -= 5;
             if (mgr.settings.target_fps < 5) mgr.settings.target_fps = 5;
-        } else if (choice == 2) { // Back
+        } else if (choice == 3) { // Back
             on_back(mgr);
         }
     } else if (ch == KEY_RIGHT) {
         if (choice == 0) { // Target FPS
             mgr.settings.target_fps += 5;
             if (mgr.settings.target_fps > 120) mgr.settings.target_fps = 120;
-        } else if (choice == 2) { // Back
+        } else if (choice == 3) { // Back
             on_select(mgr, choice); 
         }
     } else if (ch == 10) { // Enter
@@ -141,8 +142,10 @@ void SettingsState::handle_input(int ch, StateManager& mgr) {
 
 void SettingsState::on_select(StateManager& mgr, int index) {
     if (index == 1) {
-        mgr.push_state(std::make_unique<StaticNoiseSettingsState>(current_path));
+        mgr.push_state(std::make_unique<NoiseSettingsState>(current_path, NoiseSettingsState::NoiseType::STATIC));
     } else if (index == 2) {
+        mgr.push_state(std::make_unique<NoiseSettingsState>(current_path, NoiseSettingsState::NoiseType::DYNAMIC));
+    } else if (index == 3) {
         on_back(mgr);
     }
 }
@@ -151,58 +154,76 @@ void SettingsState::on_back(StateManager& mgr) {
     mgr.pop_state();
 }
 
-// --- StaticNoiseSettingsState Implementation ---
+// --- NoiseSettingsState Implementation ---
 
-StaticNoiseSettingsState::StaticNoiseSettingsState(const std::string& path) 
-    : MenuState(path + "/NOISE", {}) {
+NoiseSettingsState::NoiseSettingsState(const std::string& path, NoiseType type) 
+    : MenuState(path + (type == NoiseType::STATIC ? "/STATIC_NOISE" : "/DYNAMIC_NOISE"), {}), type(type) {
     options = {"Width Coverage", "Height Coverage", "Force Global Size", "Back"};
 }
 
-void StaticNoiseSettingsState::update_options_text(StateManager& mgr) {
-    options[0] = "Width Coverage: " + std::to_string(mgr.settings.noise_percent_w) + "%";
-    options[1] = "Height Coverage: " + std::to_string(mgr.settings.noise_percent_h) + "%";
-    options[2] = "Force Global Size: " + std::string(mgr.settings.global_noise_size ? "ON" : "OFF");
+void NoiseSettingsState::update_options_text(StateManager& mgr) {
+    int w, h;
+    bool global;
+    
+    if (type == NoiseType::STATIC) {
+        w = mgr.settings.noise_percent_w;
+        h = mgr.settings.noise_percent_h;
+        global = mgr.settings.global_noise_size;
+    } else {
+        w = mgr.settings.dynamic_noise_percent_w;
+        h = mgr.settings.dynamic_noise_percent_h;
+        global = mgr.settings.global_dynamic_noise_size;
+    }
+
+    options[0] = "Width Coverage: " + std::to_string(w) + "%";
+    options[1] = "Height Coverage: " + std::to_string(h) + "%";
+    options[2] = "Force Global Size: " + std::string(global ? "ON" : "OFF");
     options[3] = "Back";
 }
 
-void StaticNoiseSettingsState::draw(StateManager& mgr) {
+void NoiseSettingsState::draw(StateManager& mgr) {
     update_options_text(mgr);
     MenuState::draw(mgr);
 }
 
-void StaticNoiseSettingsState::handle_input(int ch, StateManager& mgr) {
+void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
     if (ch == KEY_UP || ch == KEY_DOWN) {
         MenuState::handle_input(ch, mgr);
         return;
     }
+    
+    // References to the correct variables
+    int& w = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_w : mgr.settings.dynamic_noise_percent_w;
+    int& h = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_h : mgr.settings.dynamic_noise_percent_h;
+    bool& global = (type == NoiseType::STATIC) ? mgr.settings.global_noise_size : mgr.settings.global_dynamic_noise_size;
 
     if (ch == KEY_LEFT) {
         if (choice == 0) { // Width Coverage
-            mgr.settings.noise_percent_w -= 5;
-            if (mgr.settings.noise_percent_w < 5) mgr.settings.noise_percent_w = 5;
+            w -= 5;
+            if (w < 5) w = 5;
         } else if (choice == 1) { // Height Coverage
-            mgr.settings.noise_percent_h -= 5;
-            if (mgr.settings.noise_percent_h < 5) mgr.settings.noise_percent_h = 5;
+            h -= 5;
+            if (h < 5) h = 5;
         } else if (choice == 2) { // Global Toggle
-            mgr.settings.global_noise_size = !mgr.settings.global_noise_size;
+            global = !global;
         } else if (choice == 3) { // Back
             on_back(mgr);
         }
     } else if (ch == KEY_RIGHT) {
         if (choice == 0) { // Width Coverage
-            mgr.settings.noise_percent_w += 5;
-            if (mgr.settings.noise_percent_w > 100) mgr.settings.noise_percent_w = 100;
+            w += 5;
+            if (w > 100) w = 100;
         } else if (choice == 1) { // Height Coverage
-            mgr.settings.noise_percent_h += 5;
-            if (mgr.settings.noise_percent_h > 100) mgr.settings.noise_percent_h = 100;
+            h += 5;
+            if (h > 100) h = 100;
         } else if (choice == 2) { // Global Toggle
-            mgr.settings.global_noise_size = !mgr.settings.global_noise_size;
+            global = !global;
         } else if (choice == 3) { // Back
             on_select(mgr, choice); 
         }
     } else if (ch == 10) { // Enter
         if (choice == 2) { // Toggle on Enter for bool
-             mgr.settings.global_noise_size = !mgr.settings.global_noise_size;
+             global = !global;
         } else {
              on_select(mgr, choice);
         }
@@ -211,13 +232,13 @@ void StaticNoiseSettingsState::handle_input(int ch, StateManager& mgr) {
     }
 }
 
-void StaticNoiseSettingsState::on_select(StateManager& mgr, int index) {
+void NoiseSettingsState::on_select(StateManager& mgr, int index) {
     if (index == 3) {
         on_back(mgr);
     }
 }
 
-void StaticNoiseSettingsState::on_back(StateManager& mgr) {
+void NoiseSettingsState::on_back(StateManager& mgr) {
     mgr.pop_state();
 }
 

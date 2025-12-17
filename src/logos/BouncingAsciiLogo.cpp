@@ -5,18 +5,7 @@
 
 #include "BouncingAsciiLogo.hpp"
 
-BouncingAsciiLogo::BouncingAsciiLogo(const std::vector<std::string>& art_data) : lines(art_data) {
-    height = lines.size();
-    width = 0;
-    for (const auto& line : lines) {
-        if ((int)line.length() > width) {
-            width = line.length();
-        }
-    }
-}
-
-int BouncingAsciiLogo::get_width() const { return width; }
-int BouncingAsciiLogo::get_height() const { return height; }
+BouncingAsciiLogo::BouncingAsciiLogo(const std::vector<std::string>& art_data) : AsciiLogo(art_data) {}
 
 void BouncingAsciiLogo::draw() {
     attron(COLOR_PAIR(current_pair)); 

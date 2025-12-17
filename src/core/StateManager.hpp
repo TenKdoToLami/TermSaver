@@ -49,10 +49,15 @@ public:
      * @brief Holds global configuration options.
      */
     struct AppSettings {
-        int target_fps = 30;          ///< Desired framerate for animations.
+        int target_fps = 20;          ///< Desired framerate for animations.
         int noise_percent_w = 50;     ///< Width coverage % for static noise.
         int noise_percent_h = 50;     ///< Height coverage % for static noise.
         bool global_noise_size = false; ///< If true, applies noise dimensions to all effects.
+        
+        // Dynamic Noise Settings
+        int dynamic_noise_percent_w = 50;     ///< Width coverage % for dynamic noise.
+        int dynamic_noise_percent_h = 50;     ///< Height coverage % for dynamic noise.
+        bool global_dynamic_noise_size = false; ///< If true, applies dynamic noise dimensions to all effects.
     } settings;
 
 private:

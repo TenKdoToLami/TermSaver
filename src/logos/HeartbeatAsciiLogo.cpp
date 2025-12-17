@@ -7,15 +7,7 @@
 #include <cmath>
 #include <algorithm>
 
-HeartbeatAsciiLogo::HeartbeatAsciiLogo(const std::vector<std::string>& art_data) : lines(art_data) {
-    height = lines.size();
-    width = 0;
-    for (const auto& line : lines) {
-        if ((int)line.length() > width) {
-            width = line.length();
-        }
-    }
-    
+HeartbeatAsciiLogo::HeartbeatAsciiLogo(const std::vector<std::string>& art_data) : AsciiLogo(art_data) {
     // Initial State
     state = HeartbeatState::EXPANDING;
     radius = 0.0;
@@ -27,8 +19,7 @@ HeartbeatAsciiLogo::HeartbeatAsciiLogo(const std::vector<std::string>& art_data)
     next_bg_hue = 240.0;    // Next Blue
 }
 
-int HeartbeatAsciiLogo::get_width() const { return width; }
-int HeartbeatAsciiLogo::get_height() const { return height; }
+// get_width and get_height are now in AsciiLogo
 
 void HeartbeatAsciiLogo::init_position(int scr_height, int scr_width) {
     x = (scr_width - width) / 2;
@@ -78,6 +69,7 @@ void HeartbeatAsciiLogo::update(int /*scr_height*/, int /*scr_width*/) {
             pulse_hue = (int)(pulse_hue + 40) % 360;
         }
     }
+    // Regenerate art if generator is attached (Dynamic Noise)
 }
 
 void HeartbeatAsciiLogo::draw() {
@@ -93,8 +85,6 @@ void HeartbeatAsciiLogo::draw() {
     for (int i = 0; i < height; ++i) {
          const std::string& line = lines[i];
          for (int j = 0; j < (int)line.length(); ++j) {
-             char c = line[j];
-             if (c == ' ') continue; 
              
              // Radial Distance (Aspect Corrected)
              double dy = (i - center_y) * 2.0; 
@@ -118,6 +108,17 @@ void HeartbeatAsciiLogo::draw() {
                      final_color = next_bg_color;
                  }
              }
+ 
+             // Dynamic Noise Logic: Regenerate cell if color changed
+             if (last_colors[i][j] != final_color) {
+                 last_colors[i][j] = final_color;
+                 if (cell_generator) {
+                     lines[i][j] = cell_generator();
+                 }
+             }
+
+             char c = lines[i][j];
+             if (c == ' ') continue; 
 
              attron(COLOR_PAIR(final_color));
              

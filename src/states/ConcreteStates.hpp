@@ -55,7 +55,7 @@ public:
 class LogoSelectState : public MenuState {
 public:
     LogoSelectState(const std::string& parent_path, const std::string& effect_name) 
-        : MenuState(parent_path + "/" + effect_name, {"Barty", "Pop!_OS", "Static Noise", "Back"}) {}
+        : MenuState(parent_path + "/" + effect_name, {"Barty", "Pop!_OS", "Static Noise", "Dynamic Noise", "Back"}) {}
     
 protected:
     void on_select(StateManager& mgr, int index) override;
@@ -107,12 +107,26 @@ protected:
 };
 
 /**
- * @class StaticNoiseSettingsState
- * @brief Submenu for configuring static noise specific settings.
+ * @class NoiseSettingsState
+ * @brief Submenu for configuring noise specific settings (Static & Dynamic).
+ * 
+ * Allows the user to adjust width/height coverage and toggle global application
+ * of these settings for the selected noise type.
  */
-class StaticNoiseSettingsState : public MenuState {
+class NoiseSettingsState : public MenuState {
 public:
-    StaticNoiseSettingsState(const std::string& path);
+    /**
+     * @brief The type of noise being configured.
+     */
+    enum class NoiseType { STATIC, DYNAMIC };
+
+    /**
+     * @brief Construct a new Noise Settings State object.
+     * 
+     * @param path Parent menu path for breadcrumbs.
+     * @param type The type of noise variables to modify.
+     */
+    NoiseSettingsState(const std::string& path, NoiseType type);
     
     void handle_input(int ch, StateManager& mgr) override;
     void draw(StateManager& mgr) override;
@@ -122,5 +136,7 @@ protected:
     void on_back(StateManager& mgr) override;
     
     void update_options_text(StateManager& mgr);
+    
+    NoiseType type;
 };
 
