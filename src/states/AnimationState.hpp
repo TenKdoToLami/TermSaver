@@ -17,6 +17,8 @@
  * Instantiates the correct Logo subclass based on the selected Category and Art
  * from the StateManager context. Handles frame updates and input for exiting.
  */
+
+
 class AnimationState : public State {
 public:
     AnimationState(StateManager& mgr) : app(nullptr) {
@@ -34,19 +36,22 @@ public:
              std::vector<std::string> dynamic_art;
              const std::vector<std::string>* art_ptr = nullptr;
 
-             if (art == 2 || art == 3) { // Random Noise or Dynamic Noise
+             if (art == 2 || art == 3 || art == 4) { // Random / Dynamic / Solid Block
                  int noise_w = max_x;
                  int noise_h = max_y;
-                 
-                 // Apply Percentage if applicable
-                 // Kinetic Bounce (cat == 0) -> ALWAYS use percent size
-                 // Others -> Use percent size ONLY IF global_noise_size is TRUE
                  
                  if (art == 3) { // DYNAMIC NOISE SETTINGS
                      if (cat == 0 || mgr.settings.global_dynamic_noise_size) {
                          noise_w = (max_x * mgr.settings.dynamic_noise_percent_w) / 100;
                          noise_h = (max_y * mgr.settings.dynamic_noise_percent_h) / 100;
                      }
+                 } else if (art == 4) { // SOLID BLOCK SETTINGS
+                     // Apply percentages if Global Toggle is ON OR Category is Kinetic Bounce (0)
+                     if (cat == 0 || mgr.settings.solid_block_global) {
+                         noise_w = (max_x * mgr.settings.solid_block_w_percent) / 100;
+                         noise_h = (max_y * mgr.settings.solid_block_h_percent) / 100;
+                     } 
+                     // Otherwise default to full screen (block noise behavior request "work similarly to static noise")
                  } else { // STATIC NOISE SETTINGS (art == 2)
                      if (cat == 0 || mgr.settings.global_noise_size) {
                          noise_w = (max_x * mgr.settings.noise_percent_w) / 100;
@@ -57,7 +62,11 @@ public:
                  if (noise_w < 1) noise_w = 1;
                  if (noise_h < 1) noise_h = 1;
 
-                 dynamic_art = generate_noise_art(noise_w, noise_h);
+                 if (art == 4) {
+                     dynamic_art = generate_solid_block_art(noise_w, noise_h, mgr.settings.solid_block_symbol);
+                 } else {
+                     dynamic_art = generate_noise_art(noise_w, noise_h);
+                 }
                  art_ptr = &dynamic_art;
              } else {
                  const LogoVariants* variants = (art == 0) ? &BARTY_VARIANTS : &POP_VARIANTS;
@@ -67,7 +76,7 @@ public:
              // Create Animation Instance
              Logo* raw_ptr = nullptr;
              
-             if (art == 2 || art == 3) {
+             if (art == 2 || art == 3 || art == 4) {
                  stored_art = dynamic_art;
                  if (cat == 0) raw_ptr = new BouncingAsciiLogo(stored_art);
                  else if (cat == 1) raw_ptr = new RippleAsciiLogo(stored_art);

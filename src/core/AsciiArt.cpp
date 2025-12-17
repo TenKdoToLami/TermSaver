@@ -136,3 +136,11 @@ std::vector<std::string> generate_noise_art(int width, int height) {
     }
     return art;
 }
+
+std::vector<std::string> generate_solid_block_art(int width, int height, char symbol) {
+    if (width < 1) width = 1;
+    if (height < 1) height = 1;
+
+    std::vector<std::string> art(height, std::string(width, symbol));
+    return art;
+}

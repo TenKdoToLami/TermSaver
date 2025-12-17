@@ -54,10 +54,23 @@ public:
         int noise_percent_h = 50;     ///< Height coverage % for static noise.
         bool global_noise_size = false; ///< If true, applies noise dimensions to all effects.
         
-        // Dynamic Noise Settings
-        int dynamic_noise_percent_w = 50;     ///< Width coverage % for dynamic noise.
-        int dynamic_noise_percent_h = 50;     ///< Height coverage % for dynamic noise.
-        bool global_dynamic_noise_size = false; ///< If true, applies dynamic noise dimensions to all effects.
+        // --- Dynamic Noise Settings ---
+        /** @brief Dynamic noise width percentage (5-100). */
+        int dynamic_noise_percent_w = 50;
+        /** @brief Dynamic noise height percentage (5-100). */
+        int dynamic_noise_percent_h = 50;
+        /** @brief Whether dynamic noise size applies globally to all animations. */
+        bool global_dynamic_noise_size = false;
+
+        // --- Solid Block Settings ---
+        /** @brief Solid block width percentage (5-100). */
+        int solid_block_w_percent = 50;
+        /** @brief Solid block height percentage (5-100). */
+        int solid_block_h_percent = 50;
+        /** @brief The symbol character used to render the solid block. */
+        char solid_block_symbol = '#';
+        /** @brief Whether solid block size applies globally to all animations. */
+        bool solid_block_global = false;
     } settings;
 
 private:

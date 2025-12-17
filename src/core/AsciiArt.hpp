@@ -39,3 +39,13 @@ const std::vector<std::string>& select_art(const LogoVariants& variants, bool fo
  * @return std::vector<std::string> The generated art.
  */
 std::vector<std::string> generate_noise_art(int width, int height);
+
+/**
+ * @brief Generates a solid block of a single ASCII character.
+ * 
+ * @param width Width of the block.
+ * @param height Height of the block.
+ * @param symbol The character to fill the block with.
+ * @return std::vector<std::string> The generated art.
+ */
+std::vector<std::string> generate_solid_block_art(int width, int height, char symbol);
