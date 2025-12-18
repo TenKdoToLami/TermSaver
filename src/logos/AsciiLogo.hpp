@@ -44,9 +44,9 @@ public:
 
     /**
      * @brief Sets a generator function for single cells (modifies in-place tracking).
-     * @param gen Function returning a single char.
+     * @param gen Function returning a single char for a given position (row, col).
      */
-    void set_cell_generator(std::function<char()> gen) {
+    void set_cell_generator(std::function<char(int r, int c)> gen) {
         cell_generator = gen;
     }
 
@@ -74,7 +74,7 @@ protected:
     
     // Per-cell dynamic noise tracking
     std::vector<std::vector<int>> last_colors;
-    std::function<char()> cell_generator;
+    std::function<char(int r, int c)> cell_generator;
 
     /**
      * @brief Recalculates width and height based on current lines.

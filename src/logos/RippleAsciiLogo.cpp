@@ -50,7 +50,7 @@ void RippleAsciiLogo::draw() {
              if (last_colors[i][j] != color_index) {
                  last_colors[i][j] = color_index;
                  if (cell_generator) {
-                     lines[i][j] = cell_generator();
+                     lines[i][j] = cell_generator(i, j);
                  }
              }
 

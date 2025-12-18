@@ -113,7 +113,7 @@ void HeartbeatAsciiLogo::draw() {
              if (last_colors[i][j] != final_color) {
                  last_colors[i][j] = final_color;
                  if (cell_generator) {
-                     lines[i][j] = cell_generator();
+                     lines[i][j] = cell_generator(i, j);
                  }
              }
 

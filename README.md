@@ -8,6 +8,8 @@ A premium terminal-based screensaver application written in C++ using `ncurses`.
 - **Radial Ripple**: Hypnotic, expanding color waves.
 - **Cardio Pulse**: Rhythmic, breathing heartbeat animations.
 - **Sonar Sweep**: Gap-free radar sweep with interpolated rendering and rainbow trails.
+- **Solid Block**: A retro-style bouncing block of solid characters.
+- **Solid Block Fading**: Extensions to the Solid Block effect with probabilistic cell fading and reappearance.
 - **Static Noise**: A configurable TV static effect using fixed characters.
 - **Dynamic Noise**: A regenerating noise field that reacts to animation events (bounces, pulses).
 - **Interactive Menu**:

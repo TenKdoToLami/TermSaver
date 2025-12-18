@@ -37,7 +37,10 @@ public:
         return states.top().get();
     }
     
+    /** @brief Check if the application loop should continue. */
     bool is_running() const { return running && !states.empty(); }
+
+    /** @brief Signal the application to exit. */
     void quit() { running = false; }
     
     // Global Context Data
@@ -46,13 +49,19 @@ public:
 
     /**
      * @struct AppSettings
-     * @brief Holds global configuration options.
+     * @brief Holds global configuration options for the application.
      */
     struct AppSettings {
-        int target_fps = 20;          ///< Desired framerate for animations.
-        int noise_percent_w = 50;     ///< Width coverage % for static noise.
-        int noise_percent_h = 50;     ///< Height coverage % for static noise.
-        bool global_noise_size = false; ///< If true, applies noise dimensions to all effects.
+        /** @brief Desired framerate for animations. Default 20. */
+        int target_fps = 20;
+        
+        // --- Static Noise Settings ---
+        /** @brief Width coverage % for static noise. */
+        int noise_percent_w = 50;
+        /** @brief Height coverage % for static noise. */
+        int noise_percent_h = 50;
+        /** @brief If true, applies noise dimensions to all effects. */
+        bool global_noise_size = false;
         
         // --- Dynamic Noise Settings ---
         /** @brief Dynamic noise width percentage (5-100). */
@@ -71,6 +80,23 @@ public:
         char solid_block_symbol = '#';
         /** @brief Whether solid block size applies globally to all animations. */
         bool solid_block_global = false;
+
+        // --- Solid Block Fading Settings ---
+        /** @brief Fading block width percentage (5-100). */
+        int fading_block_w_percent = 50;
+        /** @brief Fading block height percentage (5-100). */
+        int fading_block_h_percent = 50;
+        /** @brief The symbol character used to render the fading block. */
+        char fading_block_symbol = '#';
+        /** @brief Whether fading block size applies globally. */
+        bool fading_block_global = false;
+        
+        /** @brief Threshold % of visible cells to switch to Reappearing Mode (Default 10). */
+        int fading_low_threshold = 10;
+        /** @brief Threshold % of visible cells to switch to Fading Mode (Default 90). */
+        int fading_high_threshold = 90;
+        /** @brief Probability % of a cell changing state on update (Default 10). */
+        int fading_change_chance = 10;
     } settings;
 
 private:
