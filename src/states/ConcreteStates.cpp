@@ -57,6 +57,9 @@ static const std::string BLOCK_SYMBOLS = "!\"#$%&'()*+,-./:;<>=?&[]\\^|}{~";
 
 // --- LogoSelectState Implementation ---
 
+LogoSelectState::LogoSelectState(const std::string& parent_path, const std::string& effect_name) 
+    : MenuState(parent_path + "/" + effect_name, {"Barty", "Pop!_OS", "Static Noise", "Dynamic Noise", "Solid Block", "Solid Block Fading", "Back"}) {}
+
 void LogoSelectState::on_select(StateManager& mgr, int index) {
     if (index == 6) { // Back
         on_back(mgr);
@@ -66,7 +69,20 @@ void LogoSelectState::on_select(StateManager& mgr, int index) {
     }
 }
 
+void LogoSelectState::on_back(StateManager& mgr) {
+    mgr.pop_state(); 
+}
+
 // --- CategorySelectState Implementation ---
+
+CategorySelectState::CategorySelectState() : MenuState("EFFECTS", {
+    "Kinetic Bounce",
+    "Radial Ripple",
+    "Cardio Pulse",
+    "Sonar Sweep",
+    "Settings",
+    "Exit"
+}) {}
 
 void CategorySelectState::on_select(StateManager& mgr, int index) {
     mgr.context_category_index = index;

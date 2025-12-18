@@ -27,27 +27,15 @@ public:
      * @brief Standard list navigation handling.
      * Up/Down to navigate, Right/Enter to select, Left/Q to back.
      */
-    void handle_input(int ch, StateManager& mgr) override {
-        if (ch == KEY_UP) {
-            choice--;
-            if (choice < 0) choice = options.size() - 1;
-        } else if (ch == KEY_DOWN) {
-            choice++;
-            if (choice >= (int)options.size()) choice = 0;
-        } else if (ch == KEY_RIGHT || ch == 10) { 
-            on_select(mgr, choice);
-        } else if (ch == KEY_LEFT || ch == 'q' || ch == 'Q') {
-            on_back(mgr);
-        }
-    }
+    /**
+     * @brief Standard list navigation handling.
+     * Up/Down to navigate, Right/Enter to select, Left/Q to back.
+     */
+    void handle_input(int ch, StateManager& mgr) override;
 
-    void update(StateManager& /*mgr*/) override {
-        // Static menus do not require frame updates
-    }
+    void update(StateManager& /*mgr*/) override;
 
-    void draw(StateManager& /*mgr*/) override {
-        draw_menu_static(title, options, choice);
-    }
+    void draw(StateManager& /*mgr*/) override;
     
     bool is_blocking() const override { return true; }
 

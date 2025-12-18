@@ -54,14 +54,17 @@ public:
  */
 class LogoSelectState : public MenuState {
 public:
-    LogoSelectState(const std::string& parent_path, const std::string& effect_name) 
-        : MenuState(parent_path + "/" + effect_name, {"Barty", "Pop!_OS", "Static Noise", "Dynamic Noise", "Solid Block", "Solid Block Fading", "Back"}) {}
+    /**
+     * @brief Construct a new Logo Select State object.
+     * 
+     * @param parent_path Path string from the parent menu.
+     * @param effect_name Name of the effect category selected.
+     */
+    LogoSelectState(const std::string& parent_path, const std::string& effect_name);
     
 protected:
     void on_select(StateManager& mgr, int index) override;
-    void on_back(StateManager& mgr) override {
-        mgr.pop_state(); 
-    }
+    void on_back(StateManager& mgr) override;
 };
 
 /**
@@ -70,14 +73,10 @@ protected:
  */
 class CategorySelectState : public MenuState {
 public:
-    CategorySelectState() : MenuState("EFFECTS", {
-        "Kinetic Bounce",
-        "Radial Ripple",
-        "Cardio Pulse",
-        "Sonar Sweep",
-        "Settings",
-        "Exit"
-    }) {}
+    /**
+     * @brief Construct a new Category Select State object.
+     */
+    CategorySelectState();
 
 protected:
     void on_select(StateManager& mgr, int index) override;
