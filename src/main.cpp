@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include "StateManager.hpp"
-#include "ConcreteStates.hpp"
+#include "IntroState.hpp"
 
 /**
  * @brief Application Entry Point.

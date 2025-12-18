@@ -19,9 +19,7 @@ public:
      * @brief Construct a new Ascii Logo object.
      * @param art_data The initial ASCII art lines.
      */
-    AsciiLogo(const std::vector<std::string>& art_data) : lines(art_data) {
-        update_dimensions();
-    }
+    AsciiLogo(const std::vector<std::string>& art_data);
 
     virtual ~AsciiLogo() = default;
 
@@ -29,26 +27,19 @@ public:
      * @brief Set the content of the logo.
      * @param new_art New vector of strings.
      */
-    void set_art(const std::vector<std::string>& new_art) {
-        lines = new_art;
-        update_dimensions();
-    }
+    void set_art(const std::vector<std::string>& new_art);
 
     /**
      * @brief Sets a generator function for dynamic content (regenerates entire art).
      * @param gen Function returning a new vector of strings.
      */
-    void set_art_generator(std::function<std::vector<std::string>()> gen) {
-        art_generator = gen;
-    }
+    void set_art_generator(std::function<std::vector<std::string>()> gen);
 
     /**
      * @brief Sets a generator function for single cells (modifies in-place tracking).
      * @param gen Function returning a single char for a given position (row, col).
      */
-    void set_cell_generator(std::function<char(int r, int c)> gen) {
-        cell_generator = gen;
-    }
+    void set_cell_generator(std::function<char(int r, int c)> gen);
 
     /**
      * @brief Called when color changes. Regenerates art if a full-art generator is set.
@@ -56,14 +47,10 @@ public:
      * Note: Per-cell regeneration is typically handled in the draw/update loop
      * of derived classes using the cell_generator.
      */
-    void on_color_change() override {
-        if (art_generator) {
-            set_art(art_generator());
-        }
-    }
+    void on_color_change() override;
 
-    int get_width() const override { return width; }
-    int get_height() const override { return height; }
+    int get_width() const override;
+    int get_height() const override;
 
 protected:
     std::vector<std::string> lines;
@@ -80,15 +67,5 @@ protected:
      * @brief Recalculates width and height based on current lines.
      * Also resets the last_colors grid for cell tracking.
      */
-    void update_dimensions() {
-        height = lines.size();
-        width = 0;
-        for (const auto& line : lines) {
-            if ((int)line.length() > width) {
-                width = line.length();
-            }
-        }
-        // Initialize last_colors with -1 to force initial update
-        last_colors.assign(height, std::vector<int>(width, -1));
-    }
+    void update_dimensions();
 };

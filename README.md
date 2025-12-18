@@ -71,5 +71,5 @@ The output will be available in the `docs/html/` directory. Open `docs/html/inde
 
 - `src/core/`: Application loop (`main`), `StateManager`, and static helpers.
 - `src/logos/`: Visual effect implementations (`Logo` subclasses).
-- `src/states/`: Menu logic and State management classes.
+- `src/states/`: Individual state implementations (Menus, Screens, Settings) and State management.
 - `CMakeLists.txt`: Build configuration.

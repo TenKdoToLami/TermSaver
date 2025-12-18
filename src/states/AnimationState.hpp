@@ -7,6 +7,7 @@
 #include "HeartbeatAsciiLogo.hpp"
 #include "RotatingLineLogo.hpp"
 #include "StateManager.hpp"
+#include "../core/CellFader.hpp"
 
 
 
@@ -64,25 +65,6 @@ public:
     bool is_blocking() const override { return false; }
     
 private:
-    /**
-     * @class SolidBlockFader
-     * @brief Helper class to manage the probabilistic fading state of individual cells.
-     */
-    class SolidBlockFader {
-    public:
-        SolidBlockFader(int w, int h, char sym, int low_thresh, int high_thresh, int chance);
-        char update(int r, int c);
-
-    private:
-        int width, height;
-        char symbol;
-        int low_threshold, high_threshold, change_chance;
-        std::vector<std::vector<bool>> visibility;
-        int total_cells;
-        int visible_cells;
-        bool is_reappearing_mode;
-    };
-
     Logo* app;
     std::vector<std::string> stored_art; 
 };

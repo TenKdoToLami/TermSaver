@@ -75,6 +75,14 @@ public:
         /** @brief Whether dynamic noise size applies globally to all animations. */
         bool global_dynamic_noise_size = false;
 
+        // --- General Noise Fading Settings (Shared) ---
+        /** @brief Noise Fading Low Threshold %. */
+        int noise_fading_low = 10;
+        /** @brief Noise Fading High Threshold %. */
+        int noise_fading_high = 90;
+        /** @brief Noise Fading Change Chance %. */
+        int noise_fading_change_chance = 10;
+
         // --- Solid Block Settings ---
         /** @brief Solid block width percentage (5-100). */
         int solid_block_w_percent = 50;
