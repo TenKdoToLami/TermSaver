@@ -10,7 +10,6 @@ pkg_check_modules(NCURSESW REQUIRED ncursesw)
 
 # Include directories
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src/core
     ${CMAKE_SOURCE_DIR}/src/logos
     ${CMAKE_SOURCE_DIR}/src/states

@@ -122,7 +122,8 @@ void SolidBlockSettingsState::draw(StateManager& mgr) {
 
                     // Calculate visible window
                     // Available width in box allows for roughly box_width / 2 symbols (since spaced by 2)
-                    // Let's safe margin: box_width - 4 padding
+                    // Safe margin padding for symbols
+
                     int max_visible = (box_width - 4) / 2;
                     // Ensure odd number to center perfectly
                     if (max_visible % 2 == 0) max_visible--;
@@ -142,16 +143,15 @@ void SolidBlockSettingsState::draw(StateManager& mgr) {
                          if (idx < 0) idx += total_symbols;
                          
                          int draw_x = center_x + (offset * 2);
-                         
                          // Double check bounds within box
                          if (draw_x >= start_x + 1 && draw_x <= start_x + box_width - 2) {
                              if (offset == 0) {
-                                 // Center item (Selected) -> Positive
+                                 // Selected item
                                  attron(A_BOLD); 
                                  mvaddch(item_y + 1, draw_x, raw_symbols[idx]);
                                  attroff(A_BOLD);
                              } else {
-                                 // Side items -> Negative
+                                 // Other items
                                  attron(A_BOLD | A_REVERSE);
                                  mvaddch(item_y + 1, draw_x, raw_symbols[idx]);
                                  attroff(A_BOLD | A_REVERSE);

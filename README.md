@@ -11,7 +11,8 @@ A premium terminal-based screensaver application written in C++ using `ncurses`.
 - **Solid Block**: A retro-style bouncing block of solid characters.
 - **Solid Block Fading**: Extensions to the Solid Block effect with probabilistic cell fading and reappearance.
 - **Static Noise**: A configurable TV static effect using fixed characters.
-- **Dynamic Noise**: A regenerating noise field that reacts to animation events (bounces, pulses).
+- **Dynamic Noise**: A regenerating noise field for movement-based effects.
+- **Noise Fading**: Probabilistic cell fading applied to both static and dynamic patterns.
 - **Interactive Menu**:
     - **Slot Machine** scrolling style centered layout.
     - **Breadcrumb Navigation** (e.g., `SELECT EFFECT / SETTINGS / NOISE`).

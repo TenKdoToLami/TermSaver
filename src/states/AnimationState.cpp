@@ -116,7 +116,7 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
                                                        mgr.settings.noise_fading_change_chance);
                 };
 
-                // Capture by value for lambdas
+                // Capture settings by value for lambdas
                 if (cat == 0) { // Kinetic Bounce - Regenerate Full Art
                     if (art == 5) {
                         // SOLID BLOCK FADING (Bounce)

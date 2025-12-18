@@ -35,18 +35,9 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
     // 0.5 Initialize Grid if needed
     if (!initialized || (int)cell_colors.size() != height || (int)cell_colors[0].size() != width) {
         cell_colors.assign(height, std::vector<int>(width, get_color_from_hue(current_brush_hue))); 
-        // Start everything as Red (0 degrees) or White?
-        // User said: "start as one colour and the line would degree by degree change the colour"
-        // Let's start with White (standard) or a specific Hue.
-        // Assuming current_hue starts at 0 (Red). 
-        // Let's initialize everything to color based on hue 0.
-        // And ensure brush starts at a different hue? OR starts at hue 0 and paints over?
-        
-        // Better: Initialize all to a default color (e.g. current_pair or White/Grey)
-        // And let the brush paint colors on top.
-        // But for "Hues", we rely on our 1-255 map.
-        // Let's Init to Hue 200 (Blue) and Sweep with Hue 0 (Red).
-        int initial_color = get_color_from_hue(200); 
+        // Initialize cells with a default starting color
+        int initial_color = get_color_from_hue(200); // Start with Blue-ish
+ 
         for(auto& row : cell_colors) std::fill(row.begin(), row.end(), initial_color);
         
         initialized = true;
@@ -120,25 +111,15 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
 
 void RotatingLineLogo::draw() {
     // 1. Draw Underlying Art using Persistent Colors
-    
-    // We do NOT use current_pair anymore, except maybe for defaults?
-    // We iterate the GRID.
-    
     for (int i = 0; i < height; ++i) {
          if (i >= (int)lines.size()) break;
          const std::string& line = lines[i];
          for (int j = 0; j < (int)line.length(); ++j) {
              char c = line[j];
-             
-             // REMOVED calling cell_generator here to prevent global flashing.
-             // Content is now baked into 'lines' during update() sweep.
-             
              if (c == ' ') continue;
-             
              int color = cell_colors[i][j];
-             
              attron(COLOR_PAIR(color));
-             attron(A_BOLD); // Always bold for vibrant look or maybe optional?
+             attron(A_BOLD); 
              
              wchar_t wc = (wchar_t)c;
              wchar_t wstr[2] = {wc, 0};
