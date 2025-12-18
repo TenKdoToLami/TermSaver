@@ -42,6 +42,9 @@ public:
         /** @brief Desired framerate for animations. Default 20. */
         int target_fps = 20;
         
+        /** @brief Interval in degrees for Sonar Sweep color change. Default 100. */
+        int sonar_color_interval = 100;
+        
         // --- Static Noise Settings ---
         /** @brief Width coverage % for static noise. */
         int noise_percent_w = 50;

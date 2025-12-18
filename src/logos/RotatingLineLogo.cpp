@@ -5,8 +5,8 @@
 
 #include "RotatingLineLogo.hpp"
 
-RotatingLineLogo::RotatingLineLogo(const std::vector<std::string>& art_data) 
-    : AsciiLogo(art_data), angle(0.0), current_brush_hue(0.0), initialized(false) {}
+RotatingLineLogo::RotatingLineLogo(const std::vector<std::string>& art_data, int interval) 
+    : AsciiLogo(art_data), angle(0.0), current_brush_hue(0.0), color_change_interval(interval), initialized(false) {}
 
 std::vector<RotatingLineLogo::Point> RotatingLineLogo::get_line_points(int x1, int y1, int x2, int y2) {
     std::vector<Point> pts;
@@ -94,18 +94,16 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
     double old_angle = angle;
     angle += angle_speed;
     
-    // Check for Half Rotation (PI) crossing
-    if (old_angle < 3.14159265359 && angle >= 3.14159265359) {
+    const double rad_interval = (double)color_change_interval * (3.141592653589 / 180.0);
+    // Check if we crossed a boundary defined by color_change_interval
+    if (std::floor(old_angle / rad_interval) < std::floor(angle / rad_interval)) {
         current_brush_hue += 45.0; 
         if (current_brush_hue >= 360.0) current_brush_hue -= 360.0;
     }
 
-    // Check for Full Rotation (2 PI)
+    // Check for Full Rotation wrap-around
     if (angle >= 6.28318530718) { // 2*PI
         angle -= 6.28318530718;
-        // Cycle the Brush Hue again at 360
-        current_brush_hue += 45.0; 
-        if (current_brush_hue >= 360.0) current_brush_hue -= 360.0;
     }
 }
 
@@ -129,6 +127,4 @@ void RotatingLineLogo::draw() {
              attroff(COLOR_PAIR(color));
          }
     }
-
-    // No Overlay drawn. The "line" is invisible, it just paints.
 }

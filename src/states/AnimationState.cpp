@@ -73,12 +73,12 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
             if (cat == 0) raw_ptr = new BouncingAsciiLogo(stored_art);
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(stored_art);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(stored_art);
-            else if (cat == 3) raw_ptr = new RotatingLineLogo(stored_art);
+            else if (cat == 3) raw_ptr = new RotatingLineLogo(stored_art, mgr.settings.sonar_color_interval);
         } else {
             if (cat == 0) raw_ptr = new BouncingAsciiLogo(*art_ptr);
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(*art_ptr);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(*art_ptr);
-            else if (cat == 3) raw_ptr = new RotatingLineLogo(*art_ptr);
+            else if (cat == 3) raw_ptr = new RotatingLineLogo(*art_ptr, mgr.settings.sonar_color_interval);
         }
 
         app = raw_ptr;

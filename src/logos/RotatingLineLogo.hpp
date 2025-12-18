@@ -32,6 +32,7 @@ private:
     const double angle_speed = 0.08;///< Rotation speed (radians per frame)
     
     double current_brush_hue;       ///< Hue of the "brush" currently sweeping
+    int color_change_interval;      ///< Interval in degrees for color change
     bool initialized = false;       ///< Tracks if grid is initialized
 
     /**
@@ -40,10 +41,8 @@ private:
     std::vector<Point> get_line_points(int x1, int y1, int x2, int y2);
 
 public:
-    RotatingLineLogo(const std::vector<std::string>& art_data);
-    
+    RotatingLineLogo(const std::vector<std::string>& art_data, int interval = 100);
     // Using AsciiLogo's get_width/get_height for the art dimensions
-
 
     /**
      * @brief Updates rotation state and generates new trail segments.
