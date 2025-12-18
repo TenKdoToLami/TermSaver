@@ -61,17 +61,18 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
     int radius = (int)std::ceil(std::sqrt(half_w*half_w + half_h*half_h)) + 5;
     
     // 2. Interpolate rays to fill gaps between large angle steps
-    int steps = (int)std::ceil(radius * angle_speed * 2.0);
+    // Increased multiplier to 4.0 to prevent gaps at terminal edges
+    int steps = (int)std::ceil(radius * angle_speed * 4.0);
     if (steps < 1) steps = 1;
 
     for (int i = 1; i <= steps; ++i) {
         double t = (double)i / steps;
         double current_theta = angle + (angle_speed * t);
         
-        int x1 = cx + (int)(cos(current_theta) * radius);
-        int y1 = cy + (int)(sin(current_theta) * radius);
-        int x2 = cx - (int)(cos(current_theta) * radius); 
-        int y2 = cy - (int)(sin(current_theta) * radius);
+        int x1 = cx + (int)std::round(cos(current_theta) * radius);
+        int y1 = cy + (int)std::round(sin(current_theta) * radius);
+        int x2 = cx - (int)std::round(cos(current_theta) * radius); 
+        int y2 = cy - (int)std::round(sin(current_theta) * radius);
 
         std::vector<Point> ray_pts = get_line_points(x1, y1, x2, y2);
         
