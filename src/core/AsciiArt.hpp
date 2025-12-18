@@ -38,7 +38,7 @@ const std::vector<std::string>& select_art(const LogoVariants& variants, bool fo
  * @param height Height of the field.
  * @return std::vector<std::string> The generated art.
  */
-std::vector<std::string> generate_noise_art(int width, int height);
+std::vector<std::string> generate_noise_art(int width, int height, int space_percent = 8);
 
 /**
  * @brief Generates a solid block of a single ASCII character.

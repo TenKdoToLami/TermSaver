@@ -92,7 +92,7 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
             } else if (art == 5) {
                 dynamic_art = generate_solid_block_art(noise_w, noise_h, mgr.settings.fading_block_symbol);
             } else {
-                dynamic_art = generate_noise_art(noise_w, noise_h);
+                dynamic_art = generate_noise_art(noise_w, noise_h, mgr.settings.noise_space_percent);
             }
             art_ptr = &dynamic_art;
         } else {
@@ -160,8 +160,9 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
                         });
                     } else {
                         // DYNAMIC NOISE
+                        int space_pct = mgr.settings.dynamic_noise_space_percent;
                         ascii_logo->set_art_generator([=]() {
-                            return generate_noise_art(noise_w, noise_h);
+                            return generate_noise_art(noise_w, noise_h, space_pct);
                         });
                     }
                 } else { // Ripple/Heartbeat - Regenerate per Cell
@@ -186,8 +187,11 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
                             });
                         } else {
                             // Dynamic Noise (Random Chars)
-                            ascii_logo->set_cell_generator([](int, int) -> char {
-                                static const std::string chars = "   !\"#$%&'()*+,-./:;<>=?&[]\\^|}{~€ƒ‡—";
+                            int space_pct = mgr.settings.dynamic_noise_space_percent;
+                            
+                            ascii_logo->set_cell_generator([space_pct](int, int) -> char {
+                                if (rand() % 100 < space_pct) return ' ';
+                                static const std::string chars = "!\"#$%&'()*+,-./:;<>=?&[]\\^|}{~€ƒ‡—";
                                 return chars[rand() % chars.length()];
                             });
                         }

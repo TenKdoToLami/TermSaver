@@ -186,27 +186,30 @@ void SettingsState::on_back(StateManager& mgr) {
 
 NoiseSettingsState::NoiseSettingsState(const std::string& path, NoiseType type) 
     : MenuState(path + (type == NoiseType::STATIC ? "/STATIC_NOISE" : "/DYNAMIC_NOISE"), {}), type(type) {
-    options = {"Width Coverage", "Height Coverage", "Force Global Size", "Back"};
+    options = {"Width Coverage", "Height Coverage", "Space %", "Force Global Size", "Back"};
 }
 
 void NoiseSettingsState::update_options_text(StateManager& mgr) {
-    int w, h;
+    int w, h, s;
     bool global;
     
     if (type == NoiseType::STATIC) {
         w = mgr.settings.noise_percent_w;
         h = mgr.settings.noise_percent_h;
+        s = mgr.settings.noise_space_percent;
         global = mgr.settings.global_noise_size;
     } else {
         w = mgr.settings.dynamic_noise_percent_w;
         h = mgr.settings.dynamic_noise_percent_h;
+        s = mgr.settings.dynamic_noise_space_percent;
         global = mgr.settings.global_dynamic_noise_size;
     }
 
     options[0] = "Width Coverage: " + std::to_string(w) + "%";
     options[1] = "Height Coverage: " + std::to_string(h) + "%";
-    options[2] = "Force Global Size: " + std::string(global ? "ON" : "OFF");
-    options[3] = "Back";
+    options[2] = "Space %: " + std::to_string(s) + "%";
+    options[3] = "Force Global Size: " + std::string(global ? "ON" : "OFF");
+    options[4] = "Back";
 }
 
 void NoiseSettingsState::draw(StateManager& mgr) {
@@ -223,6 +226,7 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
     // References to the correct variables
     int& w = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_w : mgr.settings.dynamic_noise_percent_w;
     int& h = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_h : mgr.settings.dynamic_noise_percent_h;
+    int& s = (type == NoiseType::STATIC) ? mgr.settings.noise_space_percent : mgr.settings.dynamic_noise_space_percent;
     bool& global = (type == NoiseType::STATIC) ? mgr.settings.global_noise_size : mgr.settings.global_dynamic_noise_size;
 
     if (ch == KEY_LEFT) {
@@ -232,9 +236,12 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
         } else if (choice == 1) { // Height Coverage
             h -= 5;
             if (h < 5) h = 5;
-        } else if (choice == 2) { // Global Toggle
+        } else if (choice == 2) { // Space percent
+            s -= 5;
+            if (s < 0) s = 0;
+        } else if (choice == 3) { // Global Toggle
             global = !global;
-        } else if (choice == 3) { // Back
+        } else if (choice == 4) { // Back
             on_back(mgr);
         }
     } else if (ch == KEY_RIGHT) {
@@ -244,13 +251,16 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
         } else if (choice == 1) { // Height Coverage
             h += 5;
             if (h > 100) h = 100;
-        } else if (choice == 2) { // Global Toggle
+        } else if (choice == 2) { // Space percent
+            s += 5;
+            if (s > 100) s = 100;
+        } else if (choice == 3) { // Global Toggle
             global = !global;
-        } else if (choice == 3) { // Back
+        } else if (choice == 4) { // Back
             on_select(mgr, choice); 
         }
     } else if (ch == 10) { // Enter
-        if (choice == 2) { // Toggle on Enter for bool
+        if (choice == 3) { // Toggle on Enter for bool
              global = !global;
         } else {
              on_select(mgr, choice);
@@ -261,7 +271,7 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
 }
 
 void NoiseSettingsState::on_select(StateManager& mgr, int index) {
-    if (index == 3) {
+    if (index == 4) {
         on_back(mgr);
     }
 }

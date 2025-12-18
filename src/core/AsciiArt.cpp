@@ -120,17 +120,21 @@ const std::vector<std::string>& select_art(const LogoVariants& variants, bool fo
     return variants.variants.back();
 }
 
-std::vector<std::string> generate_noise_art(int width, int height) {
+std::vector<std::string> generate_noise_art(int width, int height, int space_percent) {
     std::vector<std::string> art;
     art.reserve(height);
 
-    const std::string chars = "   !\"#$%&'()*+,-./:;<>=?&[]\\^|}{~€ƒ‡—";
+    const std::string chars = "!\"#$%&'()*+,-./:;<>=?&[]\\^|}{~€ƒ‡—"; // Spaces removed
     
     for (int i = 0; i < height; ++i) {
         std::string line;
         line.reserve(width);
         for (int j = 0; j < width; ++j) {
-            line += chars[rand() % chars.length()];
+            if (rand() % 100 < space_percent) {
+                 line += ' ';
+            } else {
+                 line += chars[rand() % chars.length()];
+            }
         }
         art.push_back(line);
     }

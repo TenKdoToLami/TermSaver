@@ -60,6 +60,8 @@ public:
         int noise_percent_w = 50;
         /** @brief Height coverage % for static noise. */
         int noise_percent_h = 50;
+        /** @brief Percentage of empty space (spaces). Default 8. */
+        int noise_space_percent = 8;
         /** @brief If true, applies noise dimensions to all effects. */
         bool global_noise_size = false;
         
@@ -68,6 +70,8 @@ public:
         int dynamic_noise_percent_w = 50;
         /** @brief Dynamic noise height percentage (5-100). */
         int dynamic_noise_percent_h = 50;
+        /** @brief Percentage of empty space (spaces). Default 8. */
+        int dynamic_noise_space_percent = 8;
         /** @brief Whether dynamic noise size applies globally to all animations. */
         bool global_dynamic_noise_size = false;
 
