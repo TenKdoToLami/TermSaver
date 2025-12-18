@@ -42,44 +42,44 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
         return;
     }
     
-    // References to the correct variables
+
     int& w = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_w : mgr.settings.dynamic_noise_percent_w;
     int& h = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_h : mgr.settings.dynamic_noise_percent_h;
     int& s = (type == NoiseType::STATIC) ? mgr.settings.noise_space_percent : mgr.settings.dynamic_noise_space_percent;
     bool& global = (type == NoiseType::STATIC) ? mgr.settings.global_noise_size : mgr.settings.global_dynamic_noise_size;
 
     if (ch == KEY_LEFT) {
-        if (choice == 0) { // Width Coverage
+        if (choice == 0) {
             w -= 5;
             if (w < 5) w = 5;
-        } else if (choice == 1) { // Height Coverage
+        } else if (choice == 1) {
             h -= 5;
             if (h < 5) h = 5;
-        } else if (choice == 2) { // Space percent
+        } else if (choice == 2) {
             s -= 5;
             if (s < 0) s = 0;
-        } else if (choice == 3) { // Global Toggle
+        } else if (choice == 3) {
             global = !global;
-        } else if (choice == 4) { // Back
+        } else if (choice == 4) {
             on_back(mgr);
         }
     } else if (ch == KEY_RIGHT) {
-        if (choice == 0) { // Width Coverage
+        if (choice == 0) {
             w += 5;
             if (w > 100) w = 100;
-        } else if (choice == 1) { // Height Coverage
+        } else if (choice == 1) {
             h += 5;
             if (h > 100) h = 100;
-        } else if (choice == 2) { // Space percent
+        } else if (choice == 2) {
             s += 5;
             if (s > 100) s = 100;
-        } else if (choice == 3) { // Global Toggle
+        } else if (choice == 3) {
             global = !global;
-        } else if (choice == 4) { // Back
+        } else if (choice == 4) {
             on_select(mgr, choice); 
         }
     } else if (ch == 10) { // Enter
-        if (choice == 3) { // Toggle on Enter for bool
+        if (choice == 3) {
              global = !global;
         } else {
              on_select(mgr, choice);

@@ -18,17 +18,14 @@ CategorySelectState::CategorySelectState() : MenuState("EFFECTS", {
 void CategorySelectState::on_select(StateManager& mgr, int index) {
     mgr.context_category_index = index;
     
-    if (index == 3) { 
-         // Radar -> Go straight to Animation
-         mgr.push_state(std::make_unique<AnimationState>(mgr));
-    } else if (index == 4) {
+    if (index == 4) {
          // Settings
          mgr.push_state(std::make_unique<SettingsState>(title));
     } else if (index == 5) {
          // Exit
          mgr.quit();
     } else {
-         // Other -> Go to Logo Selection
+         // Other -> Go to Logo Selection (Kinetic, Ripple, Pulse, Radar)
          std::vector<std::string> names = {
             "KINETIC BOUNCE",
             "RADIAL RIPPLE",

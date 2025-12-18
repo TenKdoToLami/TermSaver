@@ -9,13 +9,10 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
     int cat = mgr.context_category_index;
     int art = mgr.context_art_index;
 
-    if (cat == 3) {
-        app = new RotatingLineLogo();
-    } else {
-        int max_x, max_y;
-        getmaxyx(stdscr, max_y, max_x);
+    int max_x, max_y;
+    getmaxyx(stdscr, max_y, max_x);
 
-        bool force_small = (cat == 0);
+    bool force_small = (cat == 0); // Only force small for Kinetic Bounce
 
         std::vector<std::string> dynamic_art;
         const std::vector<std::string>* art_ptr = nullptr;
@@ -76,10 +73,12 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
             if (cat == 0) raw_ptr = new BouncingAsciiLogo(stored_art);
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(stored_art);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(stored_art);
+            else if (cat == 3) raw_ptr = new RotatingLineLogo(stored_art);
         } else {
             if (cat == 0) raw_ptr = new BouncingAsciiLogo(*art_ptr);
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(*art_ptr);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(*art_ptr);
+            else if (cat == 3) raw_ptr = new RotatingLineLogo(*art_ptr);
         }
 
         app = raw_ptr;
@@ -117,8 +116,7 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
                                                        mgr.settings.noise_fading_change_chance);
                 };
 
-                // Capture by value
-                // Capture by value
+                // Capture by value for lambdas
                 if (cat == 0) { // Kinetic Bounce - Regenerate Full Art
                     if (art == 5) {
                         // SOLID BLOCK FADING (Bounce)
@@ -240,7 +238,7 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
                 }
             }
         }
-    }
+
 
     if (app) {
         int max_x, max_y;

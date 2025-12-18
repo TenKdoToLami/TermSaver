@@ -69,7 +69,7 @@ The output will be available in the `docs/html/` directory. Open `docs/html/inde
 
 ## Project Structure
 
-- `src/core/`: Application loop (`main`), `StateManager`, and static helpers.
+- `src/core/`: Application loop (`main`), `StateManager`, `CellFader`, `AsciiArt`, `Menu` and static helpers.
 - `src/logos/`: Visual effect implementations (`Logo` subclasses).
 - `src/states/`: Individual state implementations (Menus, Screens, Settings) and State management.
 - `CMakeLists.txt`: Build configuration.

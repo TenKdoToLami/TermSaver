@@ -11,31 +11,18 @@
  */
 class StateManager {
 public:
-    StateManager() : running(true) {}
-
+    StateManager();
     /** @brief Push a new state onto the stack. */
-    void push_state(std::unique_ptr<State> state) {
-        states.push(std::move(state));
-    }
+    void push_state(std::unique_ptr<State> state);
 
     /** @brief Remove the current state from the stack. */
-    void pop_state() {
-        if (!states.empty()) {
-            states.pop();
-        }
-    }
+    void pop_state();
     
     /** @brief Replace the current state with a new one. */
-    void change_state(std::unique_ptr<State> state) {
-        pop_state();
-        push_state(std::move(state));
-    }
+    void change_state(std::unique_ptr<State> state);
 
     /** @brief Get the currently active state. */
-    State* current_state() {
-        if (states.empty()) return nullptr;
-        return states.top().get();
-    }
+    State* current_state();
     
     /** @brief Check if the application loop should continue. */
     bool is_running() const { return running && !states.empty(); }

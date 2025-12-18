@@ -5,10 +5,8 @@
 
 #include "RotatingLineLogo.hpp"
 
-RotatingLineLogo::RotatingLineLogo() : angle(0.0), current_hue(0.0) {}
-
-int RotatingLineLogo::get_width() const { return 0; }
-int RotatingLineLogo::get_height() const { return 0; }
+RotatingLineLogo::RotatingLineLogo(const std::vector<std::string>& art_data) 
+    : AsciiLogo(art_data), angle(0.0), current_brush_hue(0.0), initialized(false) {}
 
 std::vector<RotatingLineLogo::Point> RotatingLineLogo::get_line_points(int x1, int y1, int x2, int y2) {
     std::vector<Point> pts;
@@ -27,7 +25,34 @@ std::vector<RotatingLineLogo::Point> RotatingLineLogo::get_line_points(int x1, i
 }
 
 void RotatingLineLogo::update(int scr_height, int scr_width) {
-    // 1. Calculate center and radius (diagonal to cover corners)
+    // 0. Update Center Position for Art
+    // Center the underlying AsciiLogo
+    x = (scr_width - width) / 2;
+    y = (scr_height - height) / 2;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+
+    // 0.5 Initialize Grid if needed
+    if (!initialized || (int)cell_colors.size() != height || (int)cell_colors[0].size() != width) {
+        cell_colors.assign(height, std::vector<int>(width, get_color_from_hue(current_brush_hue))); 
+        // Start everything as Red (0 degrees) or White?
+        // User said: "start as one colour and the line would degree by degree change the colour"
+        // Let's start with White (standard) or a specific Hue.
+        // Assuming current_hue starts at 0 (Red). 
+        // Let's initialize everything to color based on hue 0.
+        // And ensure brush starts at a different hue? OR starts at hue 0 and paints over?
+        
+        // Better: Initialize all to a default color (e.g. current_pair or White/Grey)
+        // And let the brush paint colors on top.
+        // But for "Hues", we rely on our 1-255 map.
+        // Let's Init to Hue 200 (Blue) and Sweep with Hue 0 (Red).
+        int initial_color = get_color_from_hue(200); 
+        for(auto& row : cell_colors) std::fill(row.begin(), row.end(), initial_color);
+        
+        initialized = true;
+    }
+
+    // 1. Calculate center and radius for Sweep (center of screen)
     int cx = scr_width / 2;
     int cy = scr_height / 2;
     
@@ -39,8 +64,6 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
     int steps = (int)std::ceil(radius * angle_speed * 2.0);
     if (steps < 1) steps = 1;
 
-    std::vector<Point> frame_points;
-
     for (int i = 1; i <= steps; ++i) {
         double t = (double)i / steps;
         double current_theta = angle + (angle_speed * t);
@@ -51,40 +74,79 @@ void RotatingLineLogo::update(int scr_height, int scr_width) {
         int y2 = cy - (int)(sin(current_theta) * radius);
 
         std::vector<Point> ray_pts = get_line_points(x1, y1, x2, y2);
-        frame_points.insert(frame_points.end(), ray_pts.begin(), ray_pts.end());
+        
+        // PAINT Logic
+        int brush_color = get_color_from_hue(current_brush_hue);
+        for (const auto& p : ray_pts) {
+             int local_r = p.y - y;
+             int local_c = p.x - x;
+             
+             if (local_r >= 0 && local_r < height && local_c >= 0 && local_c < width) {
+                 // Update persistent color grid
+                 cell_colors[local_r][local_c] = brush_color;
+                 
+                 // Update content if dynamic (ONLY on touch)
+                 if (cell_generator) {
+                     char new_c = cell_generator(local_r, local_c);
+                     // Ensure lines matches dimensions (it should)
+                     // Safely update the character in the buffer
+                     if (local_r < (int)lines.size() && local_c < (int)lines[local_r].length()) {
+                         lines[local_r][local_c] = new_c;
+                     }
+                 }
+             }
+        }
     }
     
-    // 3. Store frame in trail history
-    int hue_color_index = get_color_from_hue(current_hue);
-    trail.push_front({frame_points, hue_color_index});
+    // 4. Update Physics
+    double old_angle = angle;
+    angle += angle_speed;
     
-    if (trail.size() > 25) {
-        trail.pop_back();
+    // Check for Half Rotation (PI) crossing
+    if (old_angle < 3.14159265359 && angle >= 3.14159265359) {
+        current_brush_hue += 45.0; 
+        if (current_brush_hue >= 360.0) current_brush_hue -= 360.0;
     }
 
-    // 4. Update Physics
-    angle += angle_speed;
-    current_hue += 15.0; 
-    if (current_hue >= 360.0) current_hue -= 360.0;
+    // Check for Full Rotation (2 PI)
+    if (angle >= 6.28318530718) { // 2*PI
+        angle -= 6.28318530718;
+        // Cycle the Brush Hue again at 360
+        current_brush_hue += 45.0; 
+        if (current_brush_hue >= 360.0) current_brush_hue -= 360.0;
+    }
 }
 
 void RotatingLineLogo::draw() {
-    // Draw from back (oldest) to front (newest)
-    for (int i = trail.size() - 1; i >= 0; --i) {
-        const auto& state = trail[i];
-        
-        attron(COLOR_PAIR(state.color));
-        
-        // Newest = Bold
-        if (i == 0) attron(A_BOLD);
-        else attroff(A_BOLD);
-
-        for (const auto& p : state.points) {
-            // Use asterisk character
-            mvaddch(p.y, p.x, '#'); 
-        }
-        
-        if (i == 0) attroff(A_BOLD);
-        attroff(COLOR_PAIR(state.color));
+    // 1. Draw Underlying Art using Persistent Colors
+    
+    // We do NOT use current_pair anymore, except maybe for defaults?
+    // We iterate the GRID.
+    
+    for (int i = 0; i < height; ++i) {
+         if (i >= (int)lines.size()) break;
+         const std::string& line = lines[i];
+         for (int j = 0; j < (int)line.length(); ++j) {
+             char c = line[j];
+             
+             // REMOVED calling cell_generator here to prevent global flashing.
+             // Content is now baked into 'lines' during update() sweep.
+             
+             if (c == ' ') continue;
+             
+             int color = cell_colors[i][j];
+             
+             attron(COLOR_PAIR(color));
+             attron(A_BOLD); // Always bold for vibrant look or maybe optional?
+             
+             wchar_t wc = (wchar_t)c;
+             wchar_t wstr[2] = {wc, 0};
+             mvaddwstr(y + i, x + j, wstr);
+             
+             attroff(A_BOLD);
+             attroff(COLOR_PAIR(color));
+         }
     }
+
+    // No Overlay drawn. The "line" is invisible, it just paints.
 }

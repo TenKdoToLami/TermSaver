@@ -1,19 +1,20 @@
 #pragma once
-#include "Logo.hpp"
+#include "AsciiLogo.hpp"
 #include <vector>
 #include <deque>
 #include <cmath>
 
 /**
  * @class RotatingLineLogo
- * @brief Renders a rotating radar/scanner line effect.
+ * @brief Renders a rotating radar/scanner line effect over ASCII art.
  * 
  * Features:
  * - Full-screen diagonal sweep.
  * - Gap-free interpolated drawing.
  * - Rainbow Hue-cycling trails.
+ * - Renders underlying ASCII art (Barty, Noise, etc.) from base AsciiLogo.
  */
-class RotatingLineLogo : public Logo {
+class RotatingLineLogo : public AsciiLogo {
 private:
     struct Point { int x, y; };
     
@@ -26,10 +27,12 @@ private:
         int color;
     };
     
-    std::deque<LineState> trail;    ///< History of line positions
+    std::vector<std::vector<int>> cell_colors; ///< Persistent color grid
     double angle;                   ///< Current angle in radians
     const double angle_speed = 0.08;///< Rotation speed (radians per frame)
-    double current_hue;             ///< Current color hue (0-360)
+    
+    double current_brush_hue;       ///< Hue of the "brush" currently sweeping
+    bool initialized = false;       ///< Tracks if grid is initialized
 
     /**
      * @brief Generates raster points for a line using Bresenham's algorithm.
@@ -37,11 +40,10 @@ private:
     std::vector<Point> get_line_points(int x1, int y1, int x2, int y2);
 
 public:
-    RotatingLineLogo();
+    RotatingLineLogo(const std::vector<std::string>& art_data);
     
-    // Dynamic size (returns 0 as this logo covers the full screen)
-    int get_width() const override;
-    int get_height() const override;
+    // Using AsciiLogo's get_width/get_height for the art dimensions
+
 
     /**
      * @brief Updates rotation state and generates new trail segments.
