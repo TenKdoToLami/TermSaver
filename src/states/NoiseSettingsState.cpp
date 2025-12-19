@@ -1,3 +1,8 @@
+/**
+ * @file NoiseSettingsState.cpp
+ * @brief Implementation of the noise configuration menu (Static & Dynamic).
+ */
+
 #include "NoiseSettingsState.hpp"
 #include <curses.h>
 #include <string>
@@ -42,7 +47,6 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
         return;
     }
     
-
     int& w = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_w : mgr.settings.dynamic_noise_percent_w;
     int& h = (type == NoiseType::STATIC) ? mgr.settings.noise_percent_h : mgr.settings.dynamic_noise_percent_h;
     int& s = (type == NoiseType::STATIC) ? mgr.settings.noise_space_percent : mgr.settings.dynamic_noise_space_percent;
@@ -50,14 +54,11 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
 
     if (ch == KEY_LEFT) {
         if (choice == 0) {
-            w -= 5;
-            if (w < 5) w = 5;
+            w -= 5; if (w < 5) w = 5;
         } else if (choice == 1) {
-            h -= 5;
-            if (h < 5) h = 5;
+            h -= 5; if (h < 5) h = 5;
         } else if (choice == 2) {
-            s -= 5;
-            if (s < 0) s = 0;
+            s -= 5; if (s < 0) s = 0;
         } else if (choice == 3) {
             global = !global;
         } else if (choice == 4) {
@@ -65,14 +66,11 @@ void NoiseSettingsState::handle_input(int ch, StateManager& mgr) {
         }
     } else if (ch == KEY_RIGHT) {
         if (choice == 0) {
-            w += 5;
-            if (w > 100) w = 100;
+            w += 5; if (w > 100) w = 100;
         } else if (choice == 1) {
-            h += 5;
-            if (h > 100) h = 100;
+            h += 5; if (h > 100) h = 100;
         } else if (choice == 2) {
-            s += 5;
-            if (s > 100) s = 100;
+            s += 5; if (s > 100) s = 100;
         } else if (choice == 3) {
             global = !global;
         } else if (choice == 4) {
