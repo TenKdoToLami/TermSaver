@@ -33,6 +33,7 @@ public:
     // Global Context Data
     int context_category_index = 0;
     int context_art_index = 0;
+    int context_scan_direction = 0; // 0=TL, 1=T, 2=TR, 3=R, 4=BR, 5=B, 6=BL, 7=L
 
     /**
      * @struct AppSettings

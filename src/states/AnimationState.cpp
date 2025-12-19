@@ -1,4 +1,5 @@
 #include "AnimationState.hpp"
+#include "ScanningAsciiLogo.hpp"
 #include <ncurses.h>
 #include <stdlib.h> // for rand
 #include <memory>
@@ -74,11 +75,13 @@ AnimationState::AnimationState(StateManager& mgr) : app(nullptr) {
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(stored_art);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(stored_art);
             else if (cat == 3) raw_ptr = new RotatingLineLogo(stored_art, mgr.settings.sonar_color_interval);
+            else if (cat == 4) raw_ptr = new ScanningAsciiLogo(stored_art, mgr.context_scan_direction);
         } else {
             if (cat == 0) raw_ptr = new BouncingAsciiLogo(*art_ptr);
             else if (cat == 1) raw_ptr = new RippleAsciiLogo(*art_ptr);
             else if (cat == 2) raw_ptr = new HeartbeatAsciiLogo(*art_ptr);
             else if (cat == 3) raw_ptr = new RotatingLineLogo(*art_ptr, mgr.settings.sonar_color_interval);
+            else if (cat == 4) raw_ptr = new ScanningAsciiLogo(*art_ptr, mgr.context_scan_direction);
         }
 
         app = raw_ptr;
