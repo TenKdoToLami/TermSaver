@@ -3,6 +3,7 @@
 #include "SettingsState.hpp"
 #include "LogoSelectState.hpp"
 #include "ScanDirectionSelectState.hpp"
+#include "TypewriterDirectionSelectState.hpp"
 #include <memory>
 #include <vector>
 #include <string>
@@ -13,6 +14,7 @@ CategorySelectState::CategorySelectState() : MenuState("EFFECTS", {
     "Cardio Pulse",
     "Sonar Sweep",
     "Directional Scan",
+    "Typewriter",
     "Settings",
     "Exit"
 }) {}
@@ -20,15 +22,18 @@ CategorySelectState::CategorySelectState() : MenuState("EFFECTS", {
 void CategorySelectState::on_select(StateManager& mgr, int index) {
     mgr.context_category_index = index;
     
-    if (index == 5) {
+    if (index == 6) {
          // Settings
          mgr.push_state(std::make_unique<SettingsState>(title));
-    } else if (index == 6) {
+    } else if (index == 7) {
          // Exit
          mgr.quit();
     } else if (index == 4) {
          // Directional Scan -> Select Direction first
          mgr.push_state(std::make_unique<ScanDirectionSelectState>());
+    } else if (index == 5) {
+         // Typewriter -> Select Direction first
+         mgr.push_state(std::make_unique<TypewriterDirectionSelectState>());
     } else {
          // Other -> Go to Logo Selection
          std::vector<std::string> names = {
@@ -36,7 +41,8 @@ void CategorySelectState::on_select(StateManager& mgr, int index) {
             "RADIAL RIPPLE",
             "CARDIO PULSE",
             "SONAR SWEEP",
-            "DIRECTIONAL SCAN"
+            "DIRECTIONAL SCAN",
+            "TYPEWRITER"
          };
          if (index >= 0 && index < (int)names.size()) {
             mgr.push_state(std::make_unique<LogoSelectState>(title, names[index]));
